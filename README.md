@@ -25,4 +25,3 @@ Brief description of the project.
 ```bash
 pip install -r [requirements.txt]
 
-## holaaa
