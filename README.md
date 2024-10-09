@@ -1,5 +1,12 @@
 # Sharks!
 
+<p align="center">
+<img src="https://tenor.com/es/view/shark-smile-finding-nemo-bruce-the-shark-bruce-gif-22164525">
+</p>
+
+
+## Description
+
 Brief description of the project.
 
 ## Project Structure
