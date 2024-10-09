@@ -1,5 +1,8 @@
 # Sharks!
 
+<p align="center">
+  <img src="https://github.com/GemaVNZ/Quest2.-Sharks/blob/main/assets/Shark.gif" alt="Descripción del GIF">
+</p>
 
 ## Description
 
