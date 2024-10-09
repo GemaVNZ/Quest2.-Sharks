@@ -262,3 +262,155 @@ def cleaned_time(df):
     
     return df
 
+
+def clean_location_column(df, column_name):
+
+    def clean_location(location):
+        if pd.isna(location):
+            return None
+        
+        # Strip leading and trailing whitespace
+        location = location.strip()
+        
+        # Convert to title case
+        location = location.title()
+        
+        # Remove special characters (except commas and periods)
+        location = re.sub(r'[^\w\s,\.]', '', location)
+        
+        return location
+    
+    df[column_name] = df[column_name].apply(clean_location)
+    return df
+
+def location_cleaned(df):
+    df['Country'] = df['Country'].str.lower()
+    return df
+
+
+
+def clean_activity_column(df, column_name):
+
+    def clean_activity(activity):
+        if pd.isna(activity):
+            return None
+        
+        # Strip leading and trailing whitespace
+        activity = activity.strip()
+        
+        # Convert to title case
+        activity = activity.title()
+        
+        # Remove special characters (except commas and periods)
+        activity = re.sub(r'[^\w\s,\.]', '', activity)
+        
+        # Normalize common terms
+        activity = activity.replace('Snorkelling', 'Snorkeling')
+        activity = activity.replace('Boogie Boarding', 'Bodyboarding')
+        activity = activity.replace('Stand-Up Paddleboarding', 'Stand-Up Paddleboarding')
+        activity = activity.replace('Stand-Up Paddle Boarding', 'Stand-Up Paddleboarding')
+        activity = activity.replace('Scuba Diving', 'Scuba Diving')
+        activity = activity.replace('Free Diving', 'Freediving')
+        activity = activity.replace('Spearfishing', 'Spearfishing')
+        activity = activity.replace('Surfing', 'Surfing')
+        activity = activity.replace('Swimming', 'Swimming')
+        activity = activity.replace('Wading', 'Wading')
+        activity = activity.replace('Fishing', 'Fishing')
+        activity = activity.replace('Kayaking', 'Kayaking')
+        activity = activity.replace('Paddle Boarding', 'Paddleboarding')
+        activity = activity.replace('Body Boarding', 'Bodyboarding')
+        
+        return activity
+    
+    df[column_name] = df[column_name].apply(clean_activity)
+    return df
+
+def activity_cleaned(df):
+    df['Activity'] = df['Activity'].str.lower()
+    return df
+
+
+
+def clean_injury_column(df, column_name):
+    
+    def clean_injury(injury):
+        if pd.isna(injury):
+            return None
+        
+        # Strip leading and trailing whitespace
+        injury = injury.strip()
+        
+        # Convert to sentence case
+        injury = injury.capitalize()
+        
+        # Remove special characters (except commas and periods)
+        injury = re.sub(r'[^\w\s,]', '', injury)
+        
+        # Remove text after a period
+        if '.' in injury:
+            injury = injury.split('.')[0]
+        
+        return injury.strip()
+    
+    df[column_name] = df[column_name].apply(clean_injury)
+    return df
+
+def injury_cleaned(df):
+    df['Injury'] = df['Injury'].str.lower()
+    return df
+
+
+
+def clean_species_column(df, column_name):
+
+    def clean_species(species):
+        if pd.isna(species):
+            return None
+        
+        # Strip leading and trailing whitespace
+        species = species.strip()
+        
+        # Convert to title case
+        species = species.title()
+        
+        # Remove special characters (except commas and periods)
+        species = re.sub(r'[^\w\s,]', '', species)
+        
+        # Normalize common terms
+        species = species.replace('Great White', 'Great White Shark')
+        species = species.replace('Tiger Shark', 'Tiger Shark')
+        species = species.replace('Bull Shark', 'Bull Shark')
+        species = species.replace('Blacktip Shark', 'Blacktip Shark')
+        species = species.replace('White Shark', 'White Shark')
+        species = species.replace('Reef Shark', 'Reef Shark')
+        species = species.replace('Sandbar Shark', 'Sandbar Shark')
+        species = species.replace('Lemon Shark', 'Lemon Shark')
+        species = species.replace('Oceanic Whitetip Shark', 'Oceanic Whitetip Shark')
+        species = species.replace('Bronze Whaler', 'Bronze Whaler Shark')
+        species = species.replace('Nurse Shark', 'Nurse Shark')
+        species = species.replace('Mako Shark', 'Mako Shark')
+        species = species.replace('Blue Shark', 'Blue Shark')
+        species = species.replace('Wobbegong Shark', 'Wobbegong Shark')
+        species = species.replace('Sand Tiger Shark', 'Sand Tiger Shark')
+        species = species.replace('Galapagos Shark', 'Galapagos Shark')
+        species = species.replace('Cookiecutter Shark', 'Cookiecutter Shark')
+        species = species.replace('Spinner Shark', 'Spinner Shark')
+        species = species.replace('Hammerhead Shark', 'Hammerhead Shark')
+        species = species.replace('Epaulette Shark', 'Epaulette Shark')
+        species = species.replace('Tope Shark', 'Tope Shark')
+        species = species.replace('Horn Shark', 'Horn Shark')
+        species = species.replace('Whaler Shark', 'Whaler Shark')
+        
+        # Remove text inside brackets and parentheses
+        species = re.sub(r'\[.*?\]', '', species)
+        species = re.sub(r'\(.*?\)', '', species)
+        
+        return species.strip()
+    
+    df[column_name] = df[column_name].apply(clean_species)
+    return df
+
+def species_cleaned(df):
+    df['Country'] = df['Country'].str.lower()
+    return df
+
