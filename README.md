@@ -1,7 +1,7 @@
 # Sharks!
 
 <p align="center">
-  <img src="https://github.com/tu_usuario/tu_repositorio/blob/main/assets/tu_gif.gif" width="600">
+  <img src="https://github.com/tu_usuario/tu_repositorio/blob/main/assets/tu_gif.gif" alt="Descripción del GIF">
 </p>
 
 ## Description
