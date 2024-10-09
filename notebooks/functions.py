@@ -146,3 +146,30 @@ def state_cleaned(df):
     df['State'] = df['State'].apply(clean_country)
     
     return df
+
+def sex_clean(df): 
+    
+    df['Sex'] = df['Sex'].replace([' M', 'M ', 'M x 2' ], 'M')
+    df['Sex'] = df['Sex'].replace(['lli', 'N', '.' ], 'undefined')
+    
+    return df
+
+
+# Age
+
+def clean_age(df): 
+    
+    df["Age"] = df["Age"].replace(['Middle Age', '(adult)', '"middle-age"', '50s', 'adult','Middle age'], 50)
+    df['Age'] = df["Age"].replace(['20/30','20s', '28 & 22',  "20's", '28 & 26', '28, 23 & 30', '21 & ?', '23 & 20','20?', 'mid-20s','21 or 26','18 to 22','? & 19','23 & 26','25 or 28','"young"','young','17 & 35','18 or 20'],25)
+    df["Age"] = df['Age'].replace(['40s', '45 and 15', '9 & 60', '46 & 34'], 45)
+    df["Age"] = df['Age'].replace(['teen', 'Teen','a minor','Teens','?    &   14', '13 or 14','7      &    31', '16 to 18','13 or 18', '12 or 13'], 15)
+    df["Age"] = df["Age"].replace('Both 11', 11)
+    df["Age"] = df['Age'].replace(['a minor', '18 months', '9 months'], 1)
+    df["Age"] = df['Age'].replace(['Elderly', '>50', "60's", '60s'], 65)
+    df["Age"] = df['Age'].replace(['9 or 10', '10 or 12', '7 or 8','9 & 60','8 or 10'], 10)
+    df["Age"] = df['Age'].replace(['mid-30s', '33 & 26', '31 or 33', '36 & 23','30 or 36','21, 34,24 & 35','Ca. 33','33 & 37','32 & 30','37, 67, 35, 27,  ? & 27','30 & 32','33 or 37'], 33)
+    
+    df['Age'] = df['Age'].str.split(" ").str[0].apply(pd.to_numeric, errors = "coerce")
+    
+    
+    return df
