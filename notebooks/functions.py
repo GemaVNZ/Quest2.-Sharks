@@ -3,6 +3,7 @@
 import pandas as pd
 import re
 import datetime
+import numpy as np
 
 def read_data(url): 
     df = pd.read_excel(url)
@@ -173,3 +174,91 @@ def clean_age(df):
     
     
     return df
+
+
+# Time 
+
+def clean_time_format(time_str):
+   
+    # Convertir el valor a cadena de texto
+    time_str = str(time_str)
+    
+    # Manejar valores como NaN, "Not stated", "?"
+    if pd.isna(time_str) or 'Not' in time_str or '?' in time_str or time_str == '' or time_str == ' ' or time_str ==  '':
+        return np.nan
+    
+    if ('not advised' in time_str.lower() or 'not stated' in time_str.lower()): 
+        return np.nan
+    elif ('early morning' in time_str.lower() or 'morning' in time_str.lower() or 'just before noon' in time_str.lower() or 'am' in time_str.lower() or 'a.m.' in time_str.lower()
+        or 'late morning' in time_str.lower() or 'noon' in time_str.lower() or 'mid morning' in time_str.lower() or 'mid-morning' in time_str.lower()
+        or 'Sometime between 06h00 & 08hoo' in time_str or 'Between 11h00 & 12h00' in time_str or 'Before 10h30' in time_str): 
+        return 'Morning'
+    elif ('afternoon' in time_str.lower() or '"midday"' in time_str.lower() or 'early afternoon' in time_str.lower() or 'after noon' in time_str.lower() or
+        'mid afternoon' in time_str.lower() or 'daytime' in time_str.lower() or '"after lunch"' in time_str.lower() or 'midday' in time_str.lower() or 
+        'before daybreak' in time_str.lower() or '>17h30' in time_str or '17h00 Sunset' in time_str or 'Shortly before 13h00' in time_str): 
+        return 'Afternoon'
+    elif ('night' in time_str.lower() or '"evening"' in time_str.lower() or 'late afternoon' in time_str.lower() or 'sunset' in time_str.lower() or 'midnight' in time_str.lower()
+        or 'lunchtime' in time_str.lower() or 'just before sundown' in time_str.lower() or 'shortly after midnight' in time_str.lower() or 'after dusk' in time_str.lower()
+        or 'dusk' in time_str.lower() or '"night"' in time_str.lower() or 'nightfall' in time_str.lower() or 'just before dawn' in time_str.lower() or
+        'dark' in time_str.lower() or '"shortly before dusk"' in time_str.lower() or 'After dusk' in time_str.lower() or 'after midnight' in time_str.lower() or 
+        '"Early evening"' in time_str.lower() or 'After 04h00' in time_str or 'Ship aban-doned at 03h10' in time_str or '30 minutes after 1992.07.08.a' in time_str): 
+        return 'Night'
+    
+    else: 
+        # Tratar casos con "hr", "h", etc. y eliminar caracteres extra
+        time_str = time_str.lower().replace('hr', 'h').replace('hoo', 'h').replace('jh', 'h')
+        time_str = re.sub(r'[^\dh]', '', time_str)  # Eliminar caracteres no numéricos y letras extrañas
+        
+        # Eliminar 'h' al inicio o dobles h's incorrectas (como 'h12h00')
+        time_str = re.sub(r'^h', '', time_str)  # Eliminar 'h' al inicio
+        time_str = re.sub(r'h+', 'h', time_str)  # Asegurar que solo haya una 'h'
+
+        
+        
+        # Tratar números como 1600 o 16h15, convertir a "HH:MM"
+        match = re.match(r'(\d{1,2})h(\d{1,2})?', time_str)
+        if match:
+            hour = int(match.group(1))
+            minute = int(match.group(2)) if match.group(2) else 0
+            return f'{hour:02d}:{minute:02d}'
+        
+        match_numeric = re.match(r'(\d{1,4})', time_str)
+        if match_numeric:
+            hour = int(match_numeric.group(1)[:2])
+            minute = int(match_numeric.group(1)[2:]) if len(match_numeric.group(1)) > 2 else 0
+            return f'{hour:02d}:{minute:02d}'
+    
+    return time_str
+
+
+def categorize_time(cleaned_time):
+    if pd.isna(cleaned_time):
+        return np.nan
+    if cleaned_time == 'Morning':
+        return 'Morning'
+    if cleaned_time == 'Afternoon':
+        return 'Afternoon'
+    if cleaned_time == 'Night':
+        return 'Night'
+    
+    try:
+        # Convertir a horas y minutos
+        hour, minute = map(int, cleaned_time.split(':'))
+        if 6 <= hour < 12:
+            return 'Morning'
+        elif 12 <= hour < 18:
+            return 'Afternoon'
+        else:
+            return 'Night'
+    except:
+        return np.nan
+    
+    
+def cleaned_time(df):
+    
+    df['Time'] = df['Time'].apply(clean_time_format)
+    df['Time'] = df['Time'].replace('', np.nan)
+    df['Time'] = df['Time'].apply(categorize_time)
+    
+    return df
+
