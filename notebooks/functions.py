@@ -361,56 +361,92 @@ def injury_cleaned(df):
 
 
 
-def clean_species_column(df, column_name):
-
-    def clean_species(species):
-        if pd.isna(species):
-            return None
-        
-        # Strip leading and trailing whitespace
-        species = species.strip()
-        
-        # Convert to title case
-        species = species.title()
-        
-        # Remove special characters (except commas and periods)
-        species = re.sub(r'[^\w\s,]', '', species)
-        
-        # Normalize common terms
-        species = species.replace('Great White', 'Great White Shark')
-        species = species.replace('Tiger Shark', 'Tiger Shark')
-        species = species.replace('Bull Shark', 'Bull Shark')
-        species = species.replace('Blacktip Shark', 'Blacktip Shark')
-        species = species.replace('White Shark', 'White Shark')
-        species = species.replace('Reef Shark', 'Reef Shark')
-        species = species.replace('Sandbar Shark', 'Sandbar Shark')
-        species = species.replace('Lemon Shark', 'Lemon Shark')
-        species = species.replace('Oceanic Whitetip Shark', 'Oceanic Whitetip Shark')
-        species = species.replace('Bronze Whaler', 'Bronze Whaler Shark')
-        species = species.replace('Nurse Shark', 'Nurse Shark')
-        species = species.replace('Mako Shark', 'Mako Shark')
-        species = species.replace('Blue Shark', 'Blue Shark')
-        species = species.replace('Wobbegong Shark', 'Wobbegong Shark')
-        species = species.replace('Sand Tiger Shark', 'Sand Tiger Shark')
-        species = species.replace('Galapagos Shark', 'Galapagos Shark')
-        species = species.replace('Cookiecutter Shark', 'Cookiecutter Shark')
-        species = species.replace('Spinner Shark', 'Spinner Shark')
-        species = species.replace('Hammerhead Shark', 'Hammerhead Shark')
-        species = species.replace('Epaulette Shark', 'Epaulette Shark')
-        species = species.replace('Tope Shark', 'Tope Shark')
-        species = species.replace('Horn Shark', 'Horn Shark')
-        species = species.replace('Whaler Shark', 'Whaler Shark')
-        
-        # Remove text inside brackets and parentheses
-        species = re.sub(r'\[.*?\]', '', species)
-        species = re.sub(r'\(.*?\)', '', species)
-        
-        return species.strip()
+def clean_and_normalize_species(df, column_name):
+    """
+    Limpia y normaliza la columna de especies en el DataFrame.
     
-    df[column_name] = df[column_name].apply(clean_species)
-    return df
+    Args:
+    df (pd.DataFrame): El DataFrame que contiene la columna a limpiar.
+    column_name (str): El nombre de la columna a limpiar.
+    
+    Returns:
+    pd.DataFrame: El DataFrame con la columna limpiada y normalizada.
+    """
+    def replace_species(value, replacements):
+        if pd.notna(value):  # Check if value is not NaN
+            value_lower = value.lower()
+            for key, replacement in replacements.items():
+                if key in value_lower:
+                    return replacement
+        return value
 
-def species_cleaned(df):
-    df['Country'] = df['Country'].str.lower()
-    return df
+    # Diccionario de términos y sus sustituciones
+    replacements = {
+        'white': 'White Shark',
+        'tiger': 'Tiger Shark',
+        'bull': 'Bull Shark',
+        'nurse': 'Nurse Shark',
+        'blacktip': 'Blacktip Shark',
+        'hammerhead': 'Hammerhead Shark',
+        'lemon': 'Lemon Shark',
+        'blue': 'Blue Shark',
+        'brown': 'Brown Shark',
+        'raggedtooth': 'Raggedtooth Shark',
+        'bronze': 'Bronze Shark',
+        'caribbean': 'Caribbean Shark',
+        'mako': 'Mako Shark'
+    }
 
+    # Aplicar la función de sustitución a la columna 'Species'
+    df[column_name] = df[column_name].apply(replace_species, replacements=replacements)
+
+    # Reemplazar valores no deseados con 'NA'
+    mapping = {
+        ' ' : 'NA',
+        'no shark involvement' : 'NA',
+        'no shark invovlement' : 'NA',
+        'no shark invovlement - it ws a publicity stunt' : 'NA',
+        'Invalid' : 'NA',
+        'Invalid incident' : 'NA',
+        'Questionable' :'NA',
+        'Questionable incident' :'NA',
+        '"small sharks"' : 'NA',
+        '"a small shark"' : 'NA',
+        'No shark involvement' : 'NA',
+        '1NAm NA] shark' : 'NA',
+        'Shark involvement prior to death was not confirmed' : 'NA',
+        'Shark involvement not confirmed ' : 'NA',
+        'NA shark ' : 'NA',
+        '1NAm shark' : 'NA',
+        "4' shark" : 'NA',
+        "6' shark" : 'NA',
+        "4' toNA shark" : 'NA',
+        "2NAm NA] shark" : 'NA',
+        "3' shark" : 'NA',
+        "5' shark" : 'NA', 
+        "3' toNA shark" : 'NA',
+        "2 m shark" : 'NA',
+        "3 m NA'] shark": 'NA',
+        "3 m shark": 'NA', 
+        "1NAm toNA5 m NA toNA] shark": 'NA',
+        "3NAm NA'] shark": 'NA',
+        "7' shark": 'NA', 
+        "8' shark": 'NA',
+        "5' toNA shark": 'NA',
+        "2NAm shark": 'NA',
+        "2' toNA shark": 'NA',
+        "a small shark": 'NA',
+        "Shark involvement prior to death not confirmed": 'NA',
+        "1 m shark": 'NA',   
+        "Shark involvement not confirmed": 'NA',
+        "Shark involvement prior to death unconfirmed": 'NA',
+        "NA shark": 'NA',
+    }
+
+    # Reemplazar valores no deseados en la columna 'Species'
+    df[column_name] = df[column_name].replace(mapping)
+
+    # Eliminar filas con 'NA' en la columna 'Species'
+    df = df[df[column_name] != 'NA']
+    
+    return df
