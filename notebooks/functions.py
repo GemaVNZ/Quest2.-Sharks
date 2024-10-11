@@ -450,3 +450,150 @@ def clean_and_normalize_species(df, column_name):
     df = df[df[column_name] != 'NA']
     
     return df
+
+
+
+
+def add_oceans_column(df, country_column, new_column):
+    """
+    Añade una columna de océanos y mares al DataFrame basada en el país.
+    
+    Args:
+    df (pd.DataFrame): El DataFrame que contiene la columna de países.
+    country_column (str): El nombre de la columna de países.
+    new_column (str): El nombre de la nueva columna a añadir.
+    
+    Returns:
+    pd.DataFrame: El DataFrame con la nueva columna añadida.
+    """
+    countries_oceans = {
+        'morocco': 'Atlantic Ocean',
+        'jamaica': 'Caribbean Sea',
+        'belize': 'Caribbean Sea',
+        'australia': 'Indian Ocean and Pacific Ocean',
+        'usa': 'Atlantic Ocean and Pacific Ocean',
+        'maldive islands': 'Indian Ocean',
+        'turks and caicos': 'Atlantic Ocean',
+        'french polynesia': 'Pacific Ocean',
+        'tobago': 'Caribbean Sea',
+        'bahamas': 'Atlantic Ocean',
+        'india': 'Indian Ocean',
+        'trinidad': 'Caribbean Sea',
+        'south africa': 'Atlantic Ocean and Indian Ocean',
+        'mexico': 'Pacific Ocean and Gulf of Mexico',
+        'new zealand': 'Pacific Ocean',
+        'egypt': 'Red Sea',
+        'spain': 'Atlantic Ocean and Mediterranean Sea',
+        'portugal': 'Atlantic Ocean',
+        'samoa': 'Pacific Ocean',
+        'colombia': 'Pacific Ocean and Caribbean Sea',
+        'ecuador': 'Pacific Ocean',
+        'cuba': 'Caribbean Sea',
+        'brazil': 'Atlantic Ocean',
+        'seychelles': 'Indian Ocean',
+        'new caledonia': 'Pacific Ocean',
+        'argentina': 'Atlantic Ocean',
+        'fiji': 'Pacific Ocean',
+        'maldives': 'Indian Ocean',
+        'england': 'Atlantic Ocean',
+        'japan': 'Pacific Ocean',
+        'indonesia': 'Indian Ocean and Pacific Ocean',
+        'thailand': 'Indian Ocean and Andaman Sea',
+        'costa rica': 'Pacific Ocean and Caribbean Sea',
+        'canada': 'Atlantic Ocean, Pacific Ocean, and Arctic Ocean',
+        'jordan': 'Red Sea',
+        'papua new guinea': 'Pacific Ocean',
+        'reunion island': 'Indian Ocean',
+        'china': 'Pacific Ocean',
+        'ireland': 'Atlantic Ocean',
+        'italy': 'Mediterranean Sea',
+        'malaysia': 'Indian Ocean and South China Sea',
+        'mauritius': 'Indian Ocean',
+        'solomon islands': 'Pacific Ocean',
+        'united kingdom': 'Atlantic Ocean',
+        'united arab emirates': 'Persian Gulf',
+        'philippines': 'Pacific Ocean',
+        'cape verde': 'Atlantic Ocean',
+        'dominican republic': 'Caribbean Sea',
+        'cayman islands': 'Caribbean Sea',
+        'aruba': 'Caribbean Sea',
+        'mozambique': 'Indian Ocean',
+        'puerto rico': 'Caribbean Sea',
+        'greece': 'Mediterranean Sea',
+        'france': 'Atlantic Ocean and Mediterranean Sea',
+        'kiribati': 'Pacific Ocean',
+        'taiwan': 'Pacific Ocean',
+        'guam': 'Pacific Ocean',
+        'nigeria': 'Atlantic Ocean',
+        'tonga': 'Pacific Ocean',
+        'scotland': 'Atlantic Ocean',
+        'croatia': 'Adriatic Sea',
+        'saudi arabia': 'Red Sea and Persian Gulf',
+        'chile': 'Pacific Ocean',
+        'kenya': 'Indian Ocean',
+        'russia': 'Arctic Ocean and Pacific Ocean',
+        'south korea': 'Pacific Ocean',
+        'malta': 'Mediterranean Sea',
+        'vietnam': 'South China Sea',
+        'madagascar': 'Indian Ocean',
+        'panama': 'Pacific Ocean and Caribbean Sea',
+        'somalia': 'Indian Ocean',
+        'norway': 'Atlantic Ocean and Arctic Ocean',
+        'senegal': 'Atlantic Ocean',
+        'yemen': 'Red Sea and Gulf of Aden',
+        'sri lanka': 'Indian Ocean',
+        'uruguay': 'Atlantic Ocean',
+        'micronesia': 'Pacific Ocean',
+        'tanzania': 'Indian Ocean',
+        'marshall islands': 'Pacific Ocean',
+        'hong kong': 'Pacific Ocean',
+        'el salvador': 'Pacific Ocean',
+        'bermuda': 'Atlantic Ocean',
+        'montenegro': 'Adriatic Sea',
+        'iran': 'Persian Gulf and Caspian Sea',
+        'tunisia': 'Mediterranean Sea',
+        'namibia': 'Atlantic Ocean',
+        'bangladesh': 'Bay of Bengal',
+        'western samoa': 'Pacific Ocean',
+        'palau': 'Pacific Ocean',
+        'grenada': 'Caribbean Sea',
+        'turkey': 'Mediterranean Sea and Black Sea',
+        'singapore': 'Indian Ocean',
+        'sudan': 'Red Sea',
+        'nicaragua': 'Pacific Ocean and Caribbean Sea',
+        'american samoa': 'Pacific Ocean',
+        'guatemala': 'Pacific Ocean and Caribbean Sea',
+        'netherlands antilles': 'Caribbean Sea',
+        'iceland': 'Atlantic Ocean',
+        'barbados': 'Caribbean Sea',
+        'guyana': 'Atlantic Ocean',
+        'haiti': 'Caribbean Sea',
+        'kuwait': 'Persian Gulf',
+        'cyprus': 'Mediterranean Sea',
+        'lebanon': 'Mediterranean Sea',
+        'martinique': 'Caribbean Sea',
+        'paraguay': 'Landlocked',
+        'peru': 'Pacific Ocean',
+        'ghana': 'Atlantic Ocean',
+        'greenland': 'Atlantic Ocean and Arctic Ocean',
+        'sweden': 'Baltic Sea',
+        'djibouti': 'Red Sea and Gulf of Aden'
+    }
+
+    # Convertir los nombres de los países a minúsculas y eliminar espacios adicionales
+    df[country_column] = df[country_column].str.lower().str.strip()
+    
+    # Convertir las claves del diccionario a minúsculas y eliminar espacios adicionales
+    countries_oceans = {k.lower().strip(): v for k, v in countries_oceans.items()}
+    
+    # Imprimir algunos valores intermedios para depuración
+    print("Valores únicos de la columna de países después de convertir a minúsculas y eliminar espacios:")
+    print(df[country_column].unique())
+    
+    df[new_column] = df[country_column].map(countries_oceans)
+    
+    # Imprimir algunos valores del DataFrame después de añadir la nueva columna
+    print("Valores del DataFrame después de añadir la columna de océanos y mares:")
+    print(df[[country_column, new_column]].head(20))
+    
+    return df
