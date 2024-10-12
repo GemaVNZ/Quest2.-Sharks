@@ -9,6 +9,7 @@ def read_data(url):
     df = pd.read_excel(url)
     return df
 
+
 def drop_columns(df): 
     '''
     Drop useless columns
