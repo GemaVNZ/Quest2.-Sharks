@@ -16,6 +16,7 @@ def drop_columns(df):
     
     df.drop(columns=["Case Number.1"], inplace=True)
     df.drop(columns=["Unnamed: 21"], inplace=True)
+    df.drop(columns=["Unnamed: 11"], inplace=True)
     df.drop(columns=["Unnamed: 22"], inplace=True)
     df.drop(columns=["Case Number"], inplace=True)
     df.drop(columns=["href formula"], inplace=True)
