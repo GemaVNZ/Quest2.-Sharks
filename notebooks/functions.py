@@ -262,3 +262,338 @@ def cleaned_time(df):
     
     return df
 
+
+def clean_location_column(df, column_name):
+
+    def clean_location(location):
+        if pd.isna(location):
+            return None
+        
+        # Strip leading and trailing whitespace
+        location = location.strip()
+        
+        # Convert to title case
+        location = location.title()
+        
+        # Remove special characters (except commas and periods)
+        location = re.sub(r'[^\w\s,\.]', '', location)
+        
+        return location
+    
+    df[column_name] = df[column_name].apply(clean_location)
+    return df
+
+def location_cleaned(df):
+    df['Country'] = df['Country'].str.lower()
+    return df
+
+
+
+def clean_activity_column(df, column_name):
+
+    def clean_activity(activity):
+        if pd.isna(activity):
+            return None
+        
+        # Strip leading and trailing whitespace
+        activity = activity.strip()
+        
+        # Convert to title case
+        activity = activity.title()
+        
+        # Remove special characters (except commas and periods)
+        activity = re.sub(r'[^\w\s,\.]', '', activity)
+        
+        # Normalize common terms
+        activity = activity.replace('Snorkelling', 'Snorkeling')
+        activity = activity.replace('Boogie Boarding', 'Bodyboarding')
+        activity = activity.replace('Stand-Up Paddleboarding', 'Stand-Up Paddleboarding')
+        activity = activity.replace('Stand-Up Paddle Boarding', 'Stand-Up Paddleboarding')
+        activity = activity.replace('Scuba Diving', 'Scuba Diving')
+        activity = activity.replace('Free Diving', 'Freediving')
+        activity = activity.replace('Spearfishing', 'Spearfishing')
+        activity = activity.replace('Surfing', 'Surfing')
+        activity = activity.replace('Swimming', 'Swimming')
+        activity = activity.replace('Wading', 'Wading')
+        activity = activity.replace('Fishing', 'Fishing')
+        activity = activity.replace('Kayaking', 'Kayaking')
+        activity = activity.replace('Paddle Boarding', 'Paddleboarding')
+        activity = activity.replace('Body Boarding', 'Bodyboarding')
+        
+        return activity
+    
+    df[column_name] = df[column_name].apply(clean_activity)
+    return df
+
+def activity_cleaned(df):
+    df['Activity'] = df['Activity'].str.lower()
+    return df
+
+
+
+def clean_injury_column(df, column_name):
+    
+    def clean_injury(injury):
+        if pd.isna(injury):
+            return None
+        
+        # Strip leading and trailing whitespace
+        injury = injury.strip()
+        
+        # Convert to sentence case
+        injury = injury.capitalize()
+        
+        # Remove special characters (except commas and periods)
+        injury = re.sub(r'[^\w\s,]', '', injury)
+        
+        # Remove text after a period
+        if '.' in injury:
+            injury = injury.split('.')[0]
+        
+        return injury.strip()
+    
+    df[column_name] = df[column_name].apply(clean_injury)
+    return df
+
+def injury_cleaned(df):
+    df['Injury'] = df['Injury'].str.lower()
+    return df
+
+
+
+def clean_and_normalize_species(df, column_name):
+    """
+    Limpia y normaliza la columna de especies en el DataFrame.
+    
+    Args:
+    df (pd.DataFrame): El DataFrame que contiene la columna a limpiar.
+    column_name (str): El nombre de la columna a limpiar.
+    
+    Returns:
+    pd.DataFrame: El DataFrame con la columna limpiada y normalizada.
+    """
+    def replace_species(value, replacements):
+        if pd.notna(value):  # Check if value is not NaN
+            value_lower = value.lower()
+            for key, replacement in replacements.items():
+                if key in value_lower:
+                    return replacement
+        return value
+
+    # Diccionario de términos y sus sustituciones
+    replacements = {
+        'white': 'White Shark',
+        'tiger': 'Tiger Shark',
+        'bull': 'Bull Shark',
+        'nurse': 'Nurse Shark',
+        'blacktip': 'Blacktip Shark',
+        'hammerhead': 'Hammerhead Shark',
+        'lemon': 'Lemon Shark',
+        'blue': 'Blue Shark',
+        'brown': 'Brown Shark',
+        'raggedtooth': 'Raggedtooth Shark',
+        'bronze': 'Bronze Shark',
+        'caribbean': 'Caribbean Shark',
+        'mako': 'Mako Shark'
+    }
+
+    # Aplicar la función de sustitución a la columna 'Species'
+    df[column_name] = df[column_name].apply(replace_species, replacements=replacements)
+
+    # Reemplazar valores no deseados con 'NA'
+    mapping = {
+        ' ' : 'NA',
+        'no shark involvement' : 'NA',
+        'no shark invovlement' : 'NA',
+        'no shark invovlement - it ws a publicity stunt' : 'NA',
+        'Invalid' : 'NA',
+        'Invalid incident' : 'NA',
+        'Questionable' :'NA',
+        'Questionable incident' :'NA',
+        '"small sharks"' : 'NA',
+        '"a small shark"' : 'NA',
+        'No shark involvement' : 'NA',
+        '1NAm NA] shark' : 'NA',
+        'Shark involvement prior to death was not confirmed' : 'NA',
+        'Shark involvement not confirmed ' : 'NA',
+        'NA shark ' : 'NA',
+        '1NAm shark' : 'NA',
+        "4' shark" : 'NA',
+        "6' shark" : 'NA',
+        "4' toNA shark" : 'NA',
+        "2NAm NA] shark" : 'NA',
+        "3' shark" : 'NA',
+        "5' shark" : 'NA', 
+        "3' toNA shark" : 'NA',
+        "2 m shark" : 'NA',
+        "3 m NA'] shark": 'NA',
+        "3 m shark": 'NA', 
+        "1NAm toNA5 m NA toNA] shark": 'NA',
+        "3NAm NA'] shark": 'NA',
+        "7' shark": 'NA', 
+        "8' shark": 'NA',
+        "5' toNA shark": 'NA',
+        "2NAm shark": 'NA',
+        "2' toNA shark": 'NA',
+        "a small shark": 'NA',
+        "Shark involvement prior to death not confirmed": 'NA',
+        "1 m shark": 'NA',   
+        "Shark involvement not confirmed": 'NA',
+        "Shark involvement prior to death unconfirmed": 'NA',
+        "NA shark": 'NA',
+    }
+
+    # Reemplazar valores no deseados en la columna 'Species'
+    df[column_name] = df[column_name].replace(mapping)
+
+    # Eliminar filas con 'NA' en la columna 'Species'
+    df = df[df[column_name] != 'NA']
+    
+    return df
+
+
+
+
+def add_oceans_column(df, country_column, new_column):
+    """
+    Añade una columna de océanos y mares al DataFrame basada en el país.
+    
+    Args:
+    df (pd.DataFrame): El DataFrame que contiene la columna de países.
+    country_column (str): El nombre de la columna de países.
+    new_column (str): El nombre de la nueva columna a añadir.
+    
+    Returns:
+    pd.DataFrame: El DataFrame con la nueva columna añadida.
+    """
+    countries_oceans = {
+        'morocco': 'Atlantic Ocean',
+        'jamaica': 'Caribbean Sea',
+        'belize': 'Caribbean Sea',
+        'australia': 'Indian Ocean and Pacific Ocean',
+        'usa': 'Atlantic Ocean and Pacific Ocean',
+        'maldive islands': 'Indian Ocean',
+        'turks and caicos': 'Atlantic Ocean',
+        'french polynesia': 'Pacific Ocean',
+        'tobago': 'Caribbean Sea',
+        'bahamas': 'Atlantic Ocean',
+        'india': 'Indian Ocean',
+        'trinidad': 'Caribbean Sea',
+        'south africa': 'Atlantic Ocean and Indian Ocean',
+        'mexico': 'Pacific Ocean and Gulf of Mexico',
+        'new zealand': 'Pacific Ocean',
+        'egypt': 'Red Sea',
+        'spain': 'Atlantic Ocean and Mediterranean Sea',
+        'portugal': 'Atlantic Ocean',
+        'samoa': 'Pacific Ocean',
+        'colombia': 'Pacific Ocean and Caribbean Sea',
+        'ecuador': 'Pacific Ocean',
+        'cuba': 'Caribbean Sea',
+        'brazil': 'Atlantic Ocean',
+        'seychelles': 'Indian Ocean',
+        'new caledonia': 'Pacific Ocean',
+        'argentina': 'Atlantic Ocean',
+        'fiji': 'Pacific Ocean',
+        'maldives': 'Indian Ocean',
+        'england': 'Atlantic Ocean',
+        'japan': 'Pacific Ocean',
+        'indonesia': 'Indian Ocean and Pacific Ocean',
+        'thailand': 'Indian Ocean and Andaman Sea',
+        'costa rica': 'Pacific Ocean and Caribbean Sea',
+        'canada': 'Atlantic Ocean, Pacific Ocean, and Arctic Ocean',
+        'jordan': 'Red Sea',
+        'papua new guinea': 'Pacific Ocean',
+        'reunion island': 'Indian Ocean',
+        'china': 'Pacific Ocean',
+        'ireland': 'Atlantic Ocean',
+        'italy': 'Mediterranean Sea',
+        'malaysia': 'Indian Ocean and South China Sea',
+        'mauritius': 'Indian Ocean',
+        'solomon islands': 'Pacific Ocean',
+        'united kingdom': 'Atlantic Ocean',
+        'united arab emirates': 'Persian Gulf',
+        'philippines': 'Pacific Ocean',
+        'cape verde': 'Atlantic Ocean',
+        'dominican republic': 'Caribbean Sea',
+        'cayman islands': 'Caribbean Sea',
+        'aruba': 'Caribbean Sea',
+        'mozambique': 'Indian Ocean',
+        'puerto rico': 'Caribbean Sea',
+        'greece': 'Mediterranean Sea',
+        'france': 'Atlantic Ocean and Mediterranean Sea',
+        'kiribati': 'Pacific Ocean',
+        'taiwan': 'Pacific Ocean',
+        'guam': 'Pacific Ocean',
+        'nigeria': 'Atlantic Ocean',
+        'tonga': 'Pacific Ocean',
+        'scotland': 'Atlantic Ocean',
+        'croatia': 'Adriatic Sea',
+        'saudi arabia': 'Red Sea and Persian Gulf',
+        'chile': 'Pacific Ocean',
+        'kenya': 'Indian Ocean',
+        'russia': 'Arctic Ocean and Pacific Ocean',
+        'south korea': 'Pacific Ocean',
+        'malta': 'Mediterranean Sea',
+        'vietnam': 'South China Sea',
+        'madagascar': 'Indian Ocean',
+        'panama': 'Pacific Ocean and Caribbean Sea',
+        'somalia': 'Indian Ocean',
+        'norway': 'Atlantic Ocean and Arctic Ocean',
+        'senegal': 'Atlantic Ocean',
+        'yemen': 'Red Sea and Gulf of Aden',
+        'sri lanka': 'Indian Ocean',
+        'uruguay': 'Atlantic Ocean',
+        'micronesia': 'Pacific Ocean',
+        'tanzania': 'Indian Ocean',
+        'marshall islands': 'Pacific Ocean',
+        'hong kong': 'Pacific Ocean',
+        'el salvador': 'Pacific Ocean',
+        'bermuda': 'Atlantic Ocean',
+        'montenegro': 'Adriatic Sea',
+        'iran': 'Persian Gulf and Caspian Sea',
+        'tunisia': 'Mediterranean Sea',
+        'namibia': 'Atlantic Ocean',
+        'bangladesh': 'Bay of Bengal',
+        'western samoa': 'Pacific Ocean',
+        'palau': 'Pacific Ocean',
+        'grenada': 'Caribbean Sea',
+        'turkey': 'Mediterranean Sea and Black Sea',
+        'singapore': 'Indian Ocean',
+        'sudan': 'Red Sea',
+        'nicaragua': 'Pacific Ocean and Caribbean Sea',
+        'american samoa': 'Pacific Ocean',
+        'guatemala': 'Pacific Ocean and Caribbean Sea',
+        'netherlands antilles': 'Caribbean Sea',
+        'iceland': 'Atlantic Ocean',
+        'barbados': 'Caribbean Sea',
+        'guyana': 'Atlantic Ocean',
+        'haiti': 'Caribbean Sea',
+        'kuwait': 'Persian Gulf',
+        'cyprus': 'Mediterranean Sea',
+        'lebanon': 'Mediterranean Sea',
+        'martinique': 'Caribbean Sea',
+        'paraguay': 'Landlocked',
+        'peru': 'Pacific Ocean',
+        'ghana': 'Atlantic Ocean',
+        'greenland': 'Atlantic Ocean and Arctic Ocean',
+        'sweden': 'Baltic Sea',
+        'djibouti': 'Red Sea and Gulf of Aden'
+    }
+
+    # Convertir los nombres de los países a minúsculas y eliminar espacios adicionales
+    df[country_column] = df[country_column].str.lower().str.strip()
+    
+    # Convertir las claves del diccionario a minúsculas y eliminar espacios adicionales
+    countries_oceans = {k.lower().strip(): v for k, v in countries_oceans.items()}
+    
+    # Imprimir algunos valores intermedios para depuración
+    print("Valores únicos de la columna de países después de convertir a minúsculas y eliminar espacios:")
+    print(df[country_column].unique())
+    
+    df[new_column] = df[country_column].map(countries_oceans)
+    
+    # Imprimir algunos valores del DataFrame después de añadir la nueva columna
+    print("Valores del DataFrame después de añadir la columna de océanos y mares:")
+    print(df[[country_column, new_column]].head(20))
+    
+    return df
