@@ -733,8 +733,28 @@ def clean_and_normalize_species(df, column_name):
         '2 m': 'Large Shark', 
         'larger': 'Large Shark', 
         'hull': 'Hull Shark', 
-        '4.5  m': 'Large Shark'
-        
+        '4.5  m': 'Large Shark', 
+        'bite': 'not a shark', 
+        'cocktail': 'Cocktail Shark', 
+        'carcharhinid': 'Carcharhinid Shark',
+        'macrurus': 'C. Macrurus Shark', 
+        '“spear-eye”': 'Spear-Eye Shark', 
+        'bonita sharkk': 'Bonita Shark', 
+        'anglers': 'Anglers Shark', 
+        'tooth fragments': 'Large Shark', 
+        'to involve a pinniped instead': 'not a shark', 
+        'on turtle scraps': 'Small Shark', 
+        'another shark nearby': 'Large Shark', 
+        'dolphin': 'not a shark', 
+        'shark known as': 'Old Tom Shark', 
+        '13': 'Large Shark', 
+        "7' to 8'": 'Large Shark', 
+        'invovlement': 'not a shark', 
+        'not confirmes': 'Small Shark', 
+        "3.3 m [10'": 'Large Shark', 
+        '60 cm': 'Small Shark', 
+        "1.3 m [4'": 'Small Shark',
+         "1.8 m [6']": 'Large Shark'
        }
 
     # Aplicar la función de sustitución a la columna 'Species'
@@ -1156,7 +1176,23 @@ def clean_and_normalize_species(df, column_name):
          "Reported as  a shark bite but toothmarks appear to be those of a dolphin": 'not a shark', 
          "0.7 m [2.5'] shark": 'Small Shark', 
          "2.13 m shark": 'Large Shark', 
-         "Possibly C. leucas": "C. leucas Shark"
+         "Possibly C. leucas": "C. leucas Shark", 
+         "1.5 m, 45-kg shark": 'Small Shark', 
+         "2.3 m [7'] shark": 'Large Shark', 
+         "3.7 [12'] shark": 'Large Shark', 
+         "3 m [10'] shark seen in vicinity": 'Large Shark', 
+         "1,100-lb shark": 'Large Shark', 
+         '1.5 m, 45-kg shark': 'Small Shark', 
+         '60 cm  shark': 'Small Shark', 
+         "1.4 m [4.5'] shark": 'Small Shark', 
+         '5m shark': 'Large Shark', 
+         "2.6 m [8.5'] shark landed 2 hours later": 'Large Shark', 
+         "2.6 m [8.5'] shark": 'Large Shark', 
+         "4.4 m [14'] shark": 'Large Shark', 
+         '68" shark': 'Small Shark', 
+         'Description of shark does not ring true': 'unconfirmed', 
+         "1.8 m [6'] shark": 'Large Shark'
+         
          
          
          
@@ -1221,7 +1257,7 @@ def clean_and_normalize_species(df, column_name):
     df = df[df[column_name] != 'not a shark']
     df = df[df[column_name] != 'not a shack']
     df = df[df[column_name] != ' ']
-    
+    df = df.dropna(subset=[column_name])
     return df
 
 def add_oceans_column(df, country_column, new_column):
