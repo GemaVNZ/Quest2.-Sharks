@@ -557,7 +557,7 @@ def clean_and_normalize_species2(df, column_name):
         "1.5' to 2' shark" : 'Small Shark', 
         "2.5' shark": 'Small Shark', 
         '"a small shark"': 'Small Shark', 
-        'Not a shark attack; it was a hoax': 'not a shack'
+        'Not a shark attack; it was a hoax': 'not a shack' 
         
         
         
@@ -722,7 +722,18 @@ def clean_and_normalize_species(df, column_name):
         '500': 'Large Shark', 
         '136': 'Large Shark', 
         '193': 'Large Shark', 
-        '"yellow belly"': 'Large Shark'
+        '"yellow belly"': 'Large Shark', 
+        'rhizoprionodon': 'Gummy Shark',
+        '"banjo shark"': 'Banjo Shark', 
+        'not a shark': 'not a shark', 
+        'shark captured': 'Large Shark', 
+        'sharks': 'Large Shark', 
+        '"a very flat head”': 'Large Shark', 
+        '"gummy”': 'Gummy Shark', 
+        '2 m': 'Large Shark', 
+        'larger': 'Large Shark', 
+        'hull': 'Hull Shark', 
+        '4.5  m': 'Large Shark'
         
        }
 
@@ -1099,7 +1110,54 @@ def clean_and_normalize_species(df, column_name):
          '43" shark': 'Small Shark', 
          "2.4 m [8'], 600-lb shark": 'Large Shark', 
          '80-lb hooked shark': 'Small Shark', 
-         '200-lb shark': 'Large Shark'
+         '200-lb shark': 'Large Shark', 
+         "7' to 8' shark": 'Large Shark', 
+         'Injury believed caused by an eel, not a shark': 'not a shark',
+         "3.5 m [11.5']shark": 'Large Shark', 
+         "[4' to 5']": 'Large Shark', 
+         "2 sharks, 4.5 m & 3 m": 'Large Shark', 
+         "6 m [20'] shark": 'Large Shark', 
+         "3.7 m to 4.6 m [12' to 15'] shark seen in the vicinity": 'Large Shark', 
+         "1.8 m to 2.4 m [6' to 8'] shark, tooth fragments recovered": 'Large Shark', 
+         "1.8 m [6'] shark": 'Large Shark', 
+         "150-lb shark": 'Large Shark', 
+         "1.6 m shark": 'Small Shark', 
+         'Questionable incident; reported as shark attack but thought to involve a pinniped instead': 'unconfirmed', 
+         "1.5 m [5']  shark": 'Small Shark', 
+         "1.2 m to 1.8 m [4' to 6'] shark observed in area": 'Small Shark', 
+         '90-kg "blackfin" shark': 'Blackfin Shark', 
+         '60 cm  shark': 'Small Shark', 
+         '36"  shark': 'Small Shark', 
+         "2.7 m [9']shark":'Large Shark', 
+         "1.2 m [4'], possibly  larger shark": 'Small Shark', 
+         "Two 2.1 m [7'] sharks": 'Large Shark',
+         "3.7 m to 4.6 m [12' to 15'] shark": 'Large Shark', 
+         "2.7 m [9']  shark": 'Large Shark', 
+         "3.5 m [11.5'] shark": 'Large Shark', 
+         "3 m to 4.3 m [10' to 14'] shark": 'Large Shark', 
+         "5.5' shark": 'Small Shark', 
+         "20 kg shark": 'Small Shark', 
+         "1.8 to 2.1 m [6' to 7'] shark": 'Large Shark', 
+         "Bitten by several 1.8 m [6'] sharks": 'Large Shark', 
+         'Injury believed caused by an eel, not a shark': 'not a shark', 
+         '2 sharks, 4.5 m & 3 m': 'Large Shark', 
+         "1.2 m [4'], possibly  larger shark": 'Large Shark', 
+         "Two 2.1 m [7'] sharks": 'Large Shark', 
+         'Shark involvement prior to deaths was not confirmed': 'Small Shark', 
+         "3.5 m [11.5'] shark": 'Large Shark', 
+         "6 m [20'] shark": 'Large Shark', 
+         "20 kg shark": 'Small Shark', 
+         "1.8 to 2.1 m [6' to 7'] shark": 'Large Shark', 
+         "Said to involve 2 sharks: 5.2 m & 6 m [17' & 20']": 'Large Shark', 
+         "Sharks averaged 1.8 m [6'] in length": 'Large Shark', 
+         '8-lb shark': 'Small Shark', 
+         "2.4 m [8']  shark": 'Large Shark', 
+         "4 m [13'] shark x 6": 'Large Shark', 
+         "Reported as  a shark bite but toothmarks appear to be those of a dolphin": 'not a shark', 
+         "0.7 m [2.5'] shark": 'Small Shark', 
+         "2.13 m shark": 'Large Shark', 
+         "Possibly C. leucas": "C. leucas Shark"
+         
          
          
         
@@ -1162,7 +1220,8 @@ def clean_and_normalize_species(df, column_name):
     df = df[df[column_name] != 'unconfirmed']
     df = df[df[column_name] != 'not a shark']
     df = df[df[column_name] != 'not a shack']
-    df = df[df[column_name] != 'not a shark']
+    df = df[df[column_name] != ' ']
+    
     return df
 
 def add_oceans_column(df, country_column, new_column):
