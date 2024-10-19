@@ -321,6 +321,7 @@ def clean_activity_column(df, column_name):
         activity = activity.replace('Kayaking', 'Kayaking')
         activity = activity.replace('Paddle Boarding', 'Paddleboarding')
         activity = activity.replace('Body Boarding', 'Bodyboarding')
+        activity = activity.replace('SurfSkiing', 'Surf Skiing')
         
         return activity
     
