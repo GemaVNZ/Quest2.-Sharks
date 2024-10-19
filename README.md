@@ -37,6 +37,10 @@ The analysis revealed several interesting patterns in shark attack data, includi
 - 🌍 Geographic hotspots for shark activity.
 - 🌦️ Correlation between shark attacks and environmental factors.
 
+## Summary Report 📄
+
+For a detailed summary of the data analysis, including visualizations and key insights, please refer to the [Summary Report](https://github.com/GemaVNZ/Quest2.-Sharks/blob/main/reports/sumary_report.md).
+
 ## Project Structure 📁
 
 - `assets/`: 
